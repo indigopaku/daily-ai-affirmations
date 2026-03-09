@@ -1,32 +1,34 @@
+// server.js
+import express from "express";
+import cors from "cors";
 import OpenAI from "openai";
 
-// Initialize OpenAI with API key from Vercel environment
+const app = express();
+app.use(cors());
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Cache today's affirmation so all users see the same one
-const affirmationsCache = {};
-
-export default async function handler(req, res) {
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-
-  if (affirmationsCache[today]) {
-    return res.status(200).json({ affirmation: affirmationsCache[today] });
-  }
-
+app.get("/api/affirmation", async (req, res) => {
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        { role: "user", content: "Write a short, uplifting daily affirmation." }
-      ],
+    const today = new Date().toDateString();
+
+    // Prompt to generate a short, uplifting daily affirmation
+    const prompt = `Generate a positive, short daily affirmation for today, ${today}.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7
     });
 
-    const affirmation = response.choices[0].message.content.trim();
-    affirmationsCache[today] = affirmation;
+    const affirmation = completion.choices[0].message.content.trim();
 
-    res.status(200).json({ affirmation });
+    res.json({ date: today, affirmation });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ affirmation: "You are amazing and loved 💖" });
+    res.status(500).json({ error: "Failed to generate affirmation." });
   }
-}
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
