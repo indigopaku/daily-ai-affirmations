@@ -1,19 +1,32 @@
-// today.js - Node.js Express example
-import express from "express";
-import cors from "cors";
+import OpenAI from "openai";
 
-const app = express();
-app.use(cors());
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-app.get("/api/today", (req, res) => {
-  const today = new Date().toDateString();
+export default async function handler(req, res) {
+  try {
+    const today = new Date().toDateString();
 
-  // Hardcoded affirmation for testing
-  const affirmation = "You are resilient, capable, and loved 💖";
+    const prompt = `
+Generate a deep, uplifting daily affirmation for today, ${today}.
+Make it reflective, encouraging, and meaningful.
+Keep it short but profound.
+`;
 
-  res.json({ date: today, affirmation });
-});
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.7
+    });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+    const affirmation = completion.choices[0].message.content.trim();
+
+    res.status(200).json({ date: today, affirmation });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      date: new Date().toDateString(),
+      affirmation: "You are resilient, capable, and loved 💖"
+    });
+  }
+}
 
