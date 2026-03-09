@@ -76,7 +76,7 @@
           div.style.animation = 'fadeIn 1s forwards'; // fade in
         }, 300);
 
-      } catch(err) {
+  } catch(err) {
         console.error(err);
         // Fallback affirmation if API fails
         document.getElementById('affirmation').innerText = "You are resilient, loved, and capable of growth 💖";
@@ -84,16 +84,10 @@
           weekday: 'long', year:'numeric', month:'long', day:'numeric' 
         });
       }
-    }
 
-    function shareAffirmation() {
-      const affirmation = document.getElementById('affirmation').innerText;
-      const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(affirmation)}`;
-      window.open(url, "_blank");
-    }
+    window.open(url, "_blank");
+}
 
-    // Load one affirmation when page opens
-    getAffirmation();
-  </script>
-</body>
-</html>
+// Load one affirmation when page opens
+getAffirmation();
+</script>
