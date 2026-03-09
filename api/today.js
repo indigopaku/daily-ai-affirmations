@@ -1,33 +1,50 @@
-// today.js
+import express from "express";
 import OpenAI from "openai";
+import cors from "cors";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const app = express();
+app.use(cors());
 
-export default async function handler(req, res) {
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+app.get("/api/affirmation", async (req, res) => {
   try {
     const today = new Date().toDateString();
 
-    // Prompt for deep daily affirmation
-    const prompt = `
-Generate a deep, uplifting daily affirmation for today, ${today}.
-Make it reflective, encouraging, and meaningful.
-Keep it short but profound.
-`;
-
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7,
+      messages: [
+        {
+          role: "system",
+          content: "You generate short, powerful daily affirmations."
+        },
+        {
+          role: "user",
+          content: `Generate a positive, short daily affirmation for ${today}.`
+        }
+      ],
+      max_tokens: 40
     });
 
     const affirmation = completion.choices[0].message.content.trim();
 
-    res.status(200).json({ date: today, affirmation });
+    res.json({
+      date: today,
+      affirmation
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      date: new Date().toDateString(),
-      affirmation: "You are resilient, capable, and loved 💖",
+      error: "Failed to generate affirmation."
     });
   }
-}
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
