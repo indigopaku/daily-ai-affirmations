@@ -1,93 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Deep Daily Affirmation 🌸</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Comic Neue', sans-serif;
-      background: #f8f0fc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    #card {
-      background: #fff;
-      padding: 40px 50px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      max-width: 550px;
-      text-align: center;
-    }
-    #affirmation {
-      font-size: 1.9em;
-      margin: 20px 0;
-      opacity: 0;
-      line-height: 1.4em;
-    }
-    #date {
-      font-size: 1.1em;
-      color: #7b1fa2;
-      margin-bottom: 15px;
-    }
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      background-color: #7b1fa2;
-      color: white;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Daily Affirmation 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Comic Neue', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    text-align: center;
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    color: #4a148c;
+    margin: 0;
+    padding: 20px;
+  }
+
+  #card {
+    background: rgba(255,255,255,0.2);
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 550px;
+    text-align: center;
+  }
+
+  #affirmation {
+    font-size: 1.9em;
+    margin: 20px 0;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    line-height: 1.4em;
+  }
+
+  #date {
+    font-size: 1.1em;
+    color: #7b1fa2;
+    margin-bottom: 15px;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  button {
+    padding: 12px 24px;
+    font-size: 1em;
+    cursor: pointer;
+    background: #4a148c;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s, background 0.2s;
+    margin: 5px;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    background: #7b1fa2;
+  }
+</style>
 </head>
 <body>
-  <div id="card">
-    <h1>🌸 Deep Daily Affirmation 🌸</h1>
-    <p id="date"></p>
-    <div id="affirmation">Loading...</div>
-    <button onclick="getAffirmation()">Get New Affirmation</button>
-    <button onclick="shareAffirmation()">Share ❤️</button>
-  </div>
 
-  <script>
-    async function getAffirmation() {
-      try {
-        const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
-        const data = await res.json();
+<div id="card">
+  <h1>🌸 Deep Daily Affirmation 🌸</h1>
+  <p id="date"></p>
+  <div id="affirmation">Loading...</div>
+  <button onclick="getAffirmation()">Get New Affirmation</button>
+  <button onclick="shareAffirmation()">Share ❤️</button>
+</div>
 
-        // Format the date nicely
-        const fullDate = new Date(data.date);
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('date').innerText = fullDate.toLocaleDateString(undefined, options);
+<script>
+async function getAffirmation() {
+  try {
+    // <-- Replace with your deployed backend URL
+    const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
+    const data = await res.json();
 
-        const div = document.getElementById('affirmation');
-        div.style.opacity = 0; // fade out
-        setTimeout(() => {
-          div.innerText = data.affirmation;
-          div.style.animation = 'fadeIn 1s forwards'; // fade in
-        }, 300);
+    // Format date nicely
+    const fullDate = new Date(data.date);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date').innerText = fullDate.toLocaleDateString(undefined, options);
+
+    const div = document.getElementById('affirmation');
+    div.style.opacity = 0; // fade out
+    setTimeout(() => {
+      div.innerText = data.affirmation;
+      div.style.animation = 'fadeIn 1s forwards'; // fade in
+    }, 300);
 
   } catch(err) {
-        console.error(err);
-        // Fallback affirmation if API fails
-        document.getElementById('affirmation').innerText = "You are resilient, loved, and capable of growth 💖";
-        document.getElementById('date').innerText = new Date().toLocaleDateString(undefined, { 
-          weekday: 'long', year:'numeric', month:'long', day:'numeric' 
-        });
-      }
+    document.getElementById('affirmation').innerText = "You are resilient, loved, and capable of growth 💖";
+    document.getElementById('date').innerText = new Date().toLocaleDateString(undefined, { weekday: 'long', year:'numeric', month:'long', day:'numeric' });
+  }
+}
 
-    window.open(url, "_blank");
+function shareAffirmation() {
+  const text = encodeURIComponent(document.getElementById('affirmation').innerText);
+  const url = `https://twitter.com/intent/tweet?text=${text}`;
+  window.open(url, "_blank");
 }
 
 // Load one affirmation when page opens
 getAffirmation();
 </script>
+
+</body>
+</html>
