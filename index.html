@@ -74,8 +74,8 @@
 <script>
 async function getAffirmation() {
   try {
-    // Replace this with your deployed backend URL if on Vercel
-    const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
+    // ✅ Correct deployed backend URL
+    const res = await fetch('https://daily-ai-affirmations.vercel.app/api/today');
     const data = await res.json();
 
     const fullDate = new Date(data.date);
@@ -101,10 +101,9 @@ function shareAffirmation() {
   window.open(url, "_blank");
 }
 
-// Load first affirmation on page load
+// Load first affirmation automatically
 getAffirmation();
 </script>
 
 </body>
 </html>
-
