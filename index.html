@@ -4,9 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Daily Affirmations 🌸</title>
-<!-- CSS and fonts here -->
+<style>
+  body { font-family: Arial, sans-serif; text-align:center; padding:50px; background: #fce4ec; color:#d81b60;}
+  #affirmation { font-size: 2em; margin:20px; }
+  button { padding:10px 20px; font-size:1em; cursor:pointer; background:#d81b60; color:white; border:none; border-radius:8px; margin:5px;}
+</style>
 </head>
 <body>
-<!-- Your site content -->
+
+<h1>🌸 Daily Affirmation 🌸</h1>
+<div id="affirmation">Loading...</div>
+<button onclick="getAffirmation()">Get Another Affirmation</button>
+
+<script>
+async function getAffirmation() {
+  try {
+    // This is JavaScript fetching from your Vercel API
+    const res = await fetch('https://daily-ai-affirmations.vercel.app/api/today');
+    const data = await res.json();
+    document.getElementById('affirmation').innerText = data.affirmation;
+  } catch(err) {
+    document.getElementById('affirmation').innerText = "You are amazing and loved 💖";
+  }
+}
+
+// Load affirmation when page opens
+getAffirmation();
+</script>
+
 </body>
 </html>
