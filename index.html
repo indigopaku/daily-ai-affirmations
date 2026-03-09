@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daily Affirmation 🌸</title>
+<title>Deep Daily Affirmation 🌸</title>
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
@@ -25,20 +25,22 @@
     padding: 40px 50px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    max-width: 500px;
+    max-width: 550px;
     text-align: center;
   }
 
   #affirmation {
-    font-size: 2em;
+    font-size: 1.9em;
     margin: 20px 0;
     opacity: 0;
     animation: fadeIn 1s forwards;
+    line-height: 1.4em;
   }
 
   #date {
-    font-size: 1em;
+    font-size: 1.1em;
     color: #7b1fa2;
+    margin-bottom: 15px;
   }
 
   @keyframes fadeIn { to { opacity: 1; } }
@@ -64,9 +66,9 @@
 <body>
 
 <div id="card">
-  <h1>🌸 Daily Affirmation 🌸</h1>
-  <div id="affirmation">Loading...</div>
+  <h1>🌸 Deep Daily Affirmation 🌸</h1>
   <p id="date"></p>
+  <div id="affirmation">Loading...</div>
   <button onclick="getAffirmation()">Get New Affirmation</button>
   <button onclick="shareAffirmation()">Share ❤️</button>
 </div>
@@ -75,8 +77,13 @@
 async function getAffirmation() {
   try {
     // <-- Replace with your deployed backend URL
-    const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today'); 
+    const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
     const data = await res.json();
+
+    // Format date nicely
+    const fullDate = new Date(data.date);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date').innerText = fullDate.toLocaleDateString(undefined, options);
 
     const div = document.getElementById('affirmation');
     div.style.opacity = 0; // fade out
@@ -85,10 +92,9 @@ async function getAffirmation() {
       div.style.animation = 'fadeIn 1s forwards'; // fade in
     }, 300);
 
-    document.getElementById('date').innerText = data.date;
   } catch(err) {
-    document.getElementById('affirmation').innerText = "You are amazing and loved 💖";
-    document.getElementById('date').innerText = "";
+    document.getElementById('affirmation').innerText = "You are resilient, loved, and capable of growth 💖";
+    document.getElementById('date').innerText = new Date().toLocaleDateString(undefined, { weekday: 'long', year:'numeric', month:'long', day:'numeric' });
   }
 }
 
@@ -98,7 +104,7 @@ function shareAffirmation() {
   window.open(url, "_blank");
 }
 
-// Load one affirmation on page load
+// Load one affirmation when page opens
 getAffirmation();
 </script>
 
