@@ -74,6 +74,7 @@
 <div id="card">
   <h1>🌸 Deep Daily Affirmation 🌸</h1>
 
+  <!-- Dropdown to pick category -->
   <label for="category">Choose affirmation type:</label>
   <select id="category">
     <option value="self-love">Self-Love</option>
@@ -93,13 +94,17 @@
 async function getAffirmation() {
   try {
     const category = document.getElementById('category').value;
-    const res = await fetch(`/api/today?category=${category}`);
+
+    // <-- Make sure this matches your deployed backend URL
+    const res = await fetch(`https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today?category=${category}`);
     const data = await res.json();
 
+    // Show formatted date
     const fullDate = new Date(data.date);
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('date').innerText = fullDate.toLocaleDateString(undefined, options);
 
+    // Animate fade-out/fade-in
     const div = document.getElementById('affirmation');
     div.style.opacity = 0;
     setTimeout(() => {
