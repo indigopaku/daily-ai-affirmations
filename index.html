@@ -32,9 +32,9 @@
   #affirmation {
     font-size: 1.9em;
     margin: 20px 0;
-    opacity: 0;
-    animation: fadeIn 1s forwards;
     line-height: 1.4em;
+    opacity: 0;
+    transition: opacity 0.5s;
   }
 
   #date {
@@ -43,23 +43,29 @@
     margin-bottom: 15px;
   }
 
-  @keyframes fadeIn { to { opacity: 1; } }
+  select, button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin: 5px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+  }
 
   button {
-    padding: 12px 24px;
-    font-size: 1em;
-    cursor: pointer;
     background: #4a148c;
     color: white;
-    border: none;
-    border-radius: 12px;
     transition: transform 0.2s, background 0.2s;
-    margin: 5px;
   }
 
   button:hover {
     transform: scale(1.1);
     background: #7b1fa2;
+  }
+
+  select {
+    background: white;
+    color: #4a148c;
   }
 </style>
 </head>
@@ -67,6 +73,17 @@
 
 <div id="card">
   <h1>🌸 Deep Daily Affirmation 🌸</h1>
+
+  <!-- Category dropdown -->
+  <label for="category">Choose affirmation type:</label>
+  <select id="category">
+    <option value="self-love">Self-Love</option>
+    <option value="confidence">Confidence</option>
+    <option value="motivation">Motivation</option>
+    <option value="gratitude">Gratitude</option>
+    <option value="mindfulness">Mindfulness</option>
+  </select>
+
   <p id="date"></p>
   <div id="affirmation">Loading...</div>
   <button onclick="getAffirmation()">Get New Affirmation</button>
@@ -76,20 +93,21 @@
 <script>
 async function getAffirmation() {
   try {
-    // <-- Replace with your deployed backend URL
-    const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
+    const category = document.getElementById('category').value;
+
+    // Send category as a query param to backend
+    const res = await fetch(`https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today?category=${category}`);
     const data = await res.json();
 
-    // Format date nicely
     const fullDate = new Date(data.date);
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('date').innerText = fullDate.toLocaleDateString(undefined, options);
 
     const div = document.getElementById('affirmation');
-    div.style.opacity = 0; // fade out
+    div.style.opacity = 0;
     setTimeout(() => {
       div.innerText = data.affirmation;
-      div.style.animation = 'fadeIn 1s forwards'; // fade in
+      div.style.opacity = 1;
     }, 300);
 
   } catch(err) {
@@ -104,7 +122,7 @@ function shareAffirmation() {
   window.open(url, "_blank");
 }
 
-// Load one affirmation when page opens
+// Load first affirmation on page load
 getAffirmation();
 </script>
 
