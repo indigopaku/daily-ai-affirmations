@@ -75,7 +75,7 @@
 async function getAffirmation() {
   try {
     // ✅ Correct deployed backend URL
-    const res = await fetch('https://daily-ai-affirmations-a16ejgvnz-indigopakus-projects.vercel.app/today');
+    const res = await fetch('https://daily-ai-affirmations-indigopakus-projects.vercel.app//today');
     const data = await res.json();
 
     const fullDate = new Date(data.date);
@@ -107,4 +107,5 @@ getAffirmation();
 
 </body>
 </html>
+
 
