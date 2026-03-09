@@ -3,47 +3,77 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Daily Affirmation</title>
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<title>Daily Affirmations 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #fddde6, #ffe6f0);
+    font-family: 'Comic Neue', cursive;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     height: 100vh;
     text-align: center;
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    color: #4a148c;
+    padding: 20px;
   }
-  h1 { font-family: 'Pacifico', cursive; color: #e91e63; font-size: 3rem; margin-bottom: 0.5rem;}
-  #date { font-size: 1.2rem; color: #555; margin-bottom: 2rem;}
-  #affirmation { font-size: 1.8rem; color: #d81b60; max-width: 600px; line-height: 1.5;}
+
+  #affirmation {
+    font-size: 2em;
+    margin: 20px;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  button {
+    padding: 12px 24px;
+    font-size: 1em;
+    cursor: pointer;
+    background: #4a148c;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s, background 0.2s;
+    margin: 5px;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    background: #7b1fa2;
+  }
 </style>
 </head>
 <body>
-<h1>🌸 AI Daily Affirmation 🌸</h1>
-<div id="date"></div>
-<div id="affirmation">Loading your affirmation...</div>
+
+<h1>🌸 Daily Affirmation 🌸</h1>
+<div id="affirmation">Loading...</div>
+<button onclick="getAffirmation()">Get Another Affirmation</button>
+<button onclick="shareAffirmation()">Share ❤️</button>
 
 <script>
-async function fetchAIMessage() {
-  const today = new Date();
-  document.getElementById('date').innerText = today.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-
-  // Call your backend route to get AI-generated affirmation
+async function getAffirmation() {
   try {
-    const response = await fetch('/api/affirmation');
-    const data = await response.json();
+    const res = await fetch('https://daily-ai-affirmations.vercel.app/api/today'); // <-- Replace with your Vercel URL
+    const data = await res.json();
     document.getElementById('affirmation').innerText = data.affirmation;
-  } catch (error) {
-    document.getElementById('affirmation').innerText = "Oops! Something went wrong. Please try again later.";
-    console.error(error);
+  } catch(err) {
+    document.getElementById('affirmation').innerText = "You are amazing and loved 💖";
   }
 }
 
-fetchAIMessage();
+// Open Twitter share
+function shareAffirmation() {
+  const text = encodeURIComponent(document.getElementById('affirmation').innerText);
+  const url = `https://twitter.com/intent/tweet?text=${text}`;
+  window.open(url, "_blank");
+}
+
+// Load affirmation when page opens
+getAffirmation();
 </script>
+
 </body>
 </html>
