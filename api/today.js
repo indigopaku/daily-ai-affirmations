@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 const affirmationsCache = {};
 
 export default async function handler(req, res) {
