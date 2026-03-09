@@ -1,22 +1,25 @@
+// server.js or api/affirmation.js (Node.js)
 import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const affirmationsCache = {};
 
 export default async function handler(req, res) {
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  try {
+    const today = new Date().toDateString();
+    const prompt = `Generate a positive daily affirmation for ${today}, 1-2 sentences, uplifting and motivational.`;
 
-  if (affirmationsCache[today]) {
-    return res.status(200).json({ affirmation: affirmationsCache[today] });
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.8,
+      max_tokens: 50,
+    });
+
+    const affirmation = completion.choices[0].message.content.trim();
+
+    res.status(200).json({ affirmation });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to generate affirmation" });
   }
-
-  const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [{ role: "user", content: "Write a short, uplifting daily affirmation." }],
-  });
-
-  const affirmation = response.choices[0].message.content.trim();
-  affirmationsCache[today] = affirmation;
-
-  res.status(200).json({ affirmation });
 }
