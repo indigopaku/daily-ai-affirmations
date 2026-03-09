@@ -96,7 +96,7 @@ async function getAffirmation() {
     const category = document.getElementById('category').value;
 
     // <-- Make sure this matches your deployed backend URL
-    const res = await fetch(`https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today?category=${category}`);
+    const res = await fetch(`https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
     const data = await res.json();
 
     // Show formatted date
