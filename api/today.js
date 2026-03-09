@@ -1,34 +1,19 @@
-// today.js
-import OpenAI from "openai";
+// today.js - Node.js Express example
+import express from "express";
+import cors from "cors";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const app = express();
+app.use(cors());
 
-export default async function handler(req, res) {
-  try {
-    const today = new Date().toDateString();
-    const category = req.query.category || "general";
+app.get("/api/today", (req, res) => {
+  const today = new Date().toDateString();
 
-    const prompt = `
-Generate a deep, uplifting daily affirmation for today, ${today}.
-Category: ${category}.
-Make it reflective, encouraging, and meaningful.
-Keep it short but profound.
-`;
+  // Hardcoded affirmation for testing
+  const affirmation = "You are resilient, capable, and loved 💖";
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.7
-    });
+  res.json({ date: today, affirmation });
+});
 
-    const affirmation = completion.choices[0].message.content.trim();
-
-    res.status(200).json({ date: today, affirmation });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ date: new Date().toDateString(), affirmation: "You are resilient, capable, and loved 💖" });
-  }
-}
-
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
