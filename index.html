@@ -74,23 +74,20 @@
 <script>
 async function getAffirmation() {
   try {
-    // <-- Make sure this URL matches your deployed backend
-    const res = await fetch('https://daily-ai-affirmations-r6leatxws-indigopakus-projects.vercel.app/api/today');
+    // Replace this with your deployed backend URL if on Vercel
+    const res = await fetch('https://daily-ai-affirmations-wqp5-c0oo4ir5q-indigopakus-projects.vercel.app/api/today');
     const data = await res.json();
 
-    // Format date nicely
     const fullDate = new Date(data.date);
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('date').innerText = fullDate.toLocaleDateString(undefined, options);
 
-    // Fade-out and fade-in new affirmation
     const div = document.getElementById('affirmation');
     div.style.opacity = 0;
     setTimeout(() => {
       div.innerText = data.affirmation;
       div.style.opacity = 1;
     }, 300);
-
   } catch(err) {
     console.error(err);
     document.getElementById('affirmation').innerText = "You are resilient, loved, and capable 💖";
@@ -104,11 +101,10 @@ function shareAffirmation() {
   window.open(url, "_blank");
 }
 
-// Load first affirmation when page loads
+// Load first affirmation on page load
 getAffirmation();
 </script>
 
 </body>
 </html>
-
 
