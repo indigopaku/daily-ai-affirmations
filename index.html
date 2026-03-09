@@ -1,99 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Affirmation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(135deg, #fddde6, #ffe6f0);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-      transition: background 0.5s;
-    }
-
-    h1 {
-      font-family: 'Pacifico', cursive;
-      color: #e91e63;
-      font-size: 3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    #date {
-      font-size: 1.2rem;
-      color: #555;
-      margin-bottom: 2rem;
-    }
-
-    #affirmation {
-      font-size: 1.8rem;
-      color: #d81b60;
-      margin-bottom: 2rem;
-      max-width: 600px;
-      line-height: 1.5;
-      transition: transform 0.3s;
-    }
-
-    #affirmation:hover {
-      transform: scale(1.05);
-    }
-
-    button {
-      background-color: #e91e63;
-      color: #fff;
-      border: none;
-      padding: 12px 25px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #d81b60;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Affirmation</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #fddde6, #ffe6f0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+  }
+  h1 { font-family: 'Pacifico', cursive; color: #e91e63; font-size: 3rem; margin-bottom: 0.5rem;}
+  #date { font-size: 1.2rem; color: #555; margin-bottom: 2rem;}
+  #affirmation { font-size: 1.8rem; color: #d81b60; max-width: 600px; line-height: 1.5;}
+</style>
 </head>
 <body>
-  <h1>🌸 Daily Affirmation 🌸</h1>
-  <div id="date"></div>
-  <div id="affirmation">You are amazing and loved 💖</div>
-  <button onclick="newAffirmation()">Get Another Affirmation</button>
+<h1>🌸 AI Daily Affirmation 🌸</h1>
+<div id="date"></div>
+<div id="affirmation">Loading your affirmation...</div>
 
-  <script>
-    const affirmations = [
-      "You are amazing and loved 💖",
-      "Every day is a new opportunity 🌞",
-      "Believe in yourself and all that you are ✨",
-      "You are stronger than you think 💪",
-      "Happiness begins with you 🌸",
-      "Your potential is limitless 🚀",
-      "You bring light to the world 🌟"
-    ];
+<script>
+async function fetchAIMessage() {
+  const today = new Date();
+  document.getElementById('date').innerText = today.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
 
-    function updateDate() {
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const today = new Date();
-      document.getElementById('date').innerText = today.toLocaleDateString(undefined, options);
-    }
+  // Call your backend route to get AI-generated affirmation
+  try {
+    const response = await fetch('/api/affirmation');
+    const data = await response.json();
+    document.getElementById('affirmation').innerText = data.affirmation;
+  } catch (error) {
+    document.getElementById('affirmation').innerText = "Oops! Something went wrong. Please try again later.";
+    console.error(error);
+  }
+}
 
-    function newAffirmation() {
-      const randomIndex = Math.floor(Math.random() * affirmations.length);
-      document.getElementById('affirmation').innerText = affirmations[randomIndex];
-      // Optional: change background color randomly for fun
-      const colors = ['#fddde6', '#ffe6f0', '#ffefc1', '#e0f7fa', '#e1f5fe'];
-      document.body.style.background = `linear-gradient(135deg, ${colors[Math.floor(Math.random() * colors.length)]}, #ffe6f0)`;
-    }
-
-    updateDate();
-  </script>
+fetchAIMessage();
+</script>
 </body>
 </html>
